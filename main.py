@@ -37,12 +37,24 @@ def index():
 
 @app.route("/playlist/daily-mix-1")
 def daily_mix_1():
-    # Replace 'username' and 'playlist_id' with the actual values for Daily Mix 1
     username = '1295463866'
     playlist_id = '2b8pyKWkXM7PvPtXZ6aNLH'
     tracks = get_playlist_tracks(username, playlist_id)
     return render_template('playlist.html', tracks=tracks)
 
+@app.route("/playlist/todays-top-hits")
+def daily_mix_1():
+    username = '1295463866'
+    playlist_id = '2b8pyKWkXM7PvPtXZ6aNLH'
+    tracks = get_playlist_tracks(username, playlist_id)
+    return render_template('playlist.html', tracks=tracks)
+
+@app.route("/playlist/top-songs-2023")
+def daily_mix_1():
+    username = '1295463866'
+    playlist_id = '2b8pyKWkXM7PvPtXZ6aNLH'
+    tracks = get_playlist_tracks(username, playlist_id)
+    return render_template('playlist.html', tracks=tracks)
 
 if __name__ == "__main__":
     app.run(debug=False)
