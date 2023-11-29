@@ -1,10 +1,110 @@
-<!-- playlist.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Your head section here -->
-</head>
-<body>
+!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    </head>
+    <body>
+
+        <div class="sidebar">
+          <div class="logo">
+            <a href="#">
+              <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Logo" />
+            </a>
+          </div>
+    
+          <div class="navigation">
+            <ul>
+              <li>
+                <a href="#">
+                  <span class="fa fa-home"></span>
+                  <span>Sportify</span>
+                </a>
+              </li>
+    
+              <li>
+                <a href="#">
+                  <span class="fa fa-search"></span>
+                  <span>Search</span>
+                </a>
+              </li>
+    
+              <li>
+                <a href="#">
+                  <span class="fa fas fa-book"></span>
+                  <span>Your Library</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+    
+          <div class="navigation">
+            <ul>
+              <li>
+                <a href="#">
+                  <span class="fa fas fa-plus-square"></span>
+                  <span>Create Playlist</span>
+                </a>
+              </li>
+    
+              <!-- <li>
+                <a href="#">
+                  <span class="fa fas fa-heart"></span>
+                  <span>Liked Songs</span>
+                </a>
+              </li> -->
+            </ul>
+          </div>
+    
+          <div class="policies">
+            <ul>
+              <li>
+                <a href="#">Cookies</a>
+              </li>
+              <li>
+                <a href="#">Privacy</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    
+        <div class="main-container">
+          <div class="topbar">
+            <div class="prev-next-buttons">
+              <!-- <button type="button" class="fa fas fa-chevron-left"></button>
+              <button type="button" class="fa fas fa-chevron-right"></button> -->
+            </div>
+    
+            <div class="navbar">
+              <ul>
+                <li>
+                  <a href="#">Playlists</a>
+                </li>
+                <li>
+                  <a href="#">Support</a>
+                </li>
+                <li>
+                  <a href="#">Download</a>
+                </li>
+                <li class="divider">|</li>
+                <li>
+                  <a href="#">Sign Up</a>
+                </li>
+              </ul>
+              <button type="button">Log In</button>
+            </div>
+          </div>
+
     <h1>Daily Mix 1</h1>
     <ul>
         {% for track in tracks %}
