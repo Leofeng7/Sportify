@@ -1,7 +1,7 @@
 import json
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from flask import Flask, render_template, abort, request
+from flask import Flask, render_template, abort, request, redirect, url_for
 
 def load_credentials(file_path):
     with open(file_path, 'r') as file:
@@ -49,6 +49,15 @@ def get_playlist_tracks(sp, username, playlist_id, limit=10):
     
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    # Check for the 'code' query parameter
+    auth_code = request.args.get('code')
+    if auth_code:
+        return render_template('index.html')  # Replace with your home page template
+
+
+
 @app.route("/<username>")
 def index(username):
     credentials = load_credentials('credentials.json')
@@ -68,6 +77,9 @@ def search(username):
     if not user_credentials:
         abort(404)
 
+    # Perform the search using the selected activity
+    # For now, just pass the activity to the template
+
     return render_template('search.html', tracks=None, username=username, activity=activity)
 
 @app.route("/<username>/playlist/daily-mix-1")
@@ -83,6 +95,14 @@ def daily_mix_1(username):
     playlist_id = user_credentials['PLAYLIST_ID']
     tracks = get_playlist_tracks(sp, user_credentials['SPOTIFY_USERNAME'], playlist_id)
     return render_template('playlist.html', tracks=tracks, username=username)
+
+@app.route("/callback")
+def callback():
+    # This method assumes that you have a valid authorization code in the request
+    auth_code = request.args.get('code')
+    # Here you would typically exchange the code for a token and proceed
+    # For now, just redirect to the main page or handle accordingly
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run(debug=False)
