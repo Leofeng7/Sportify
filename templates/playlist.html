@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
@@ -18,7 +18,7 @@
 
         <div class="sidebar">
           <div class="logo">
-            <a href="#">
+            <a href="{{ url_for('index', username=username) }}">
               <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Logo" />
             </a>
           </div>
@@ -105,11 +105,24 @@
             </div>
           </div>
 
-    <h1>Daily Mix 1</h1>
-    <ul>
-        {% for track in tracks %}
-            <li>{{ track['track']['name'] }} by {{ track['track']['artists'][0]['name'] }}</li>
-        {% endfor %}
-    </ul>
+    <h2>Daily Mix 1</h2>
+    <div class="PlaylistToTest">
+        <table>
+            <tr>
+                <th>Cover</th>
+                <th>Track</th>
+                <th>Artist</th>
+            </tr>
+            {% for track in tracks %}
+            <tr>
+                <td class="album-cover"><img src="{{ track['album_cover_url'] }}" alt="Album cover" style="width:50px;height:50px;"></td>
+                <td class="track-title">{{ track['name'] }}</td>
+                <td>{{ track['artist'] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+          
+  
 </body>
 </html>

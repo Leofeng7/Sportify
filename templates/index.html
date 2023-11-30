@@ -18,7 +18,7 @@
 
         <div class="sidebar">
           <div class="logo">
-            <a href="#">
+            <a href="{{ url_for('index', username=username) }}">
               <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Logo" />
             </a>
           </div>
@@ -143,37 +143,35 @@
             <br>
             <br>
 
-            <div class="dropdown-search">
-                <h2>Type of Activity:</h2>
-                <div class="search-bar" style="display: flex; align-items: center;">
-                    <select id="activity" name="activity" style="height: 34px; border: none; border-radius: 4px; margin-right: 10px; padding: 0 8px; background-color: #181818; color: #ffffff;">
-                        <option value="traveling">Traveling</option>
-                        <option value="writing">Writing</option>
-                        <option value="drawing">Drawing</option>
-                        <option value="cleaning">Cleaning</option>
-                        <option value="meditating">Meditating</option>
-                        <option value="gardening">Gardening</option>
-                        <option value="shopping">Shopping</option>
-                        <option value="socializing">Socializing</option>
-                        <option value="streaming">Streaming</option>
-                        <option value="daydreaming">Daydreaming</option>
-                        <option value="coding">Coding</option>
-                        <option value="working">Working</option>
-                        <option value="studying">Studying</option>
-                        <option value="cooking">Cooking</option>
-                        <option value="relaxing">Relaxing</option>
-                        <option value="commuting">Commuting</option>
-                        <option value="exercising">Exercising</option>
-                        <option value="gaming">Gaming</option>
-                        <option value="partying">Partying</option>
-                        <option value="sleeping">Sleeping</option>
-
-                        <!-- Add more options as needed -->
-                    </select>
-                    <button type="button">Search</button>
-                    </div>
-                </div>
-            </div>
+            <form id="searchForm" class="dropdown-search" action="{{ url_for('search', username=username) }}" method="get">
+              <h2>Type of Activity:</h2>
+              <div class="search-bar" style="display: flex; align-items: center;">
+                <select id="activity" name="activity" style="height: 34px; border: none; border-radius: 4px; margin-right: 10px; padding: 0 8px; background-color: #181818; color: #ffffff;">
+                  <option value="traveling">Traveling</option>
+                  <option value="writing">Writing</option>
+                  <option value="drawing">Drawing</option>
+                  <option value="cleaning">Cleaning</option>
+                  <option value="meditating">Meditating</option>
+                  <option value="gardening">Gardening</option>
+                  <option value="shopping">Shopping</option>
+                  <option value="socializing">Socializing</option>
+                  <option value="streaming">Streaming</option>
+                  <option value="daydreaming">Daydreaming</option>
+                  <option value="coding">Coding</option>
+                  <option value="working">Working</option>
+                  <option value="studying">Studying</option>
+                  <option value="cooking">Cooking</option>
+                  <option value="relaxing">Relaxing</option>
+                  <option value="commuting">Commuting</option>
+                  <option value="exercising">Exercising</option>
+                  <option value="gaming">Gaming</option>
+                  <option value="partying">Partying</option>
+                  <option value="sleeping">Sleeping</option>
+                </select>
+                  <button type="submit">Search</button>
+              </div>
+            </form>
+          
 
           <div class="preview">
             <div class="text">
