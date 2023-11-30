@@ -34,7 +34,7 @@ def index(username):
 
     sp_oauth = create_spotify_oauth(user_credentials)
     sp = spotipy.Spotify(auth_manager=sp_oauth)
-    playlist_id = '2b8pyKWkXM7PvPtXZ6aNLH'  
+    playlist_id = '7vw6Fn84ybpXcHwSCrsJbn'  
     tracks = get_playlist_tracks(sp, user_credentials['SPOTIFY_USERNAME'], playlist_id)
     return render_template('index.html', tracks=tracks, username=username)
 
@@ -48,7 +48,7 @@ def daily_mix_1(username):
 
     sp_oauth = create_spotify_oauth(user_credentials)
     sp = spotipy.Spotify(auth_manager=sp_oauth)
-    playlist_id = '2b8pyKWkXM7PvPtXZ6aNLH'  
+    playlist_id = '7vw6Fn84ybpXcHwSCrsJbn'  
     tracks = get_playlist_tracks(sp, user_credentials['SPOTIFY_USERNAME'], playlist_id)
     return render_template('playlist.html', tracks=tracks, username=username)
 
