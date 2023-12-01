@@ -107,6 +107,22 @@
 <body>
 
     <h1>Search Results for "{{ activity }}"</h1>
+    <div class="PlaylistToTest">
+      <table>
+          <tr>
+              <th>Cover</th>
+              <th>Track</th>
+              <th>Artist</th>
+          </tr>
+          {% for track in tracks %}
+          <tr>
+              <td class="album-cover"><img src="{{ track['album_cover_url'] }}" alt="Album cover" style="width:50px;height:50px;"></td>
+              <td class="track-title">{{ track['name'] }}</td>
+              <td>{{ track['artist'] }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+    </div>
 </body>
  
 </html>
