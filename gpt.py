@@ -34,6 +34,33 @@ class GptAPI:
     def __init__(self):
         self.client = OpenAI(api_key="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")
         self.load_activity_feature_vectors()
+        self.activity_genre_map = {
+            "traveling": ["alternative", "indie", "pop"],
+            "writing": ["ambient", "chill", "classical"],
+            "drawing": ["indie", "chill", "ambient"],
+            "cleaning": ["pop", "dance", "edm"],
+            "meditating": ["ambient", "chill", "classical"],
+            "gardening": ["country", "chill", "classical"],
+            "shopping": ["pop", "dance", "edm"],
+            "socializing": ["pop", "r-n-b", "hip-hop"],
+            "streaming": ["pop", "edm", "hip-hop"],
+            "daydreaming": ["ambient", "indie", "chill"],
+            "coding": ["study", "chill", "ambient"],
+            "working": ["study", "work-out", "classical"],
+            "studying": ["study", "classical", "ambient"],
+            "cooking": ["pop", "country", "dance"],
+            "relaxing": ["chill", "ambient", "classical"],
+            "commuting": ["pop", "indie", "hip-hop"],
+            "exercising": ["work-out", "edm", "hip-hop"],
+            "gaming": ["edm", "rock", "hip-hop"],
+            "partying": ["club", "dance", "hip-hop"],
+            "sleeping": ["sleep", "ambient", "chill"]
+        }
+
+    def get_activity_genres(self, activity):
+        return self.activity_genre_map[activity]
+
+        
 
 #selected_features = ['popularity', 'danceability', 'energy', 'loudness', 'mode', 'valence', 'tempo']
 

@@ -30,12 +30,10 @@ class Sportify:
             sp_oauth = self.create_spotify_oauth(user_credentials)
             sp = spotipy.Spotify(auth_manager=sp_oauth)
             feature_vector = self.gptAPI.get_activity_feature_vectors()[activity]
-            print(feature_vector)
 
-            recommender = RecommendationSystem.Recommender(sp.current_user_saved_tracks(), feature_vector, sp)
-            recommendations = recommender.get_recommendation_pool()
-            tracks = self.build_tracks_with_images2(recommendations)
-            return render_template('search.html', tracks=tracks, username=username, activity=activity)
+            recommender = RecommendationSystem.Recommender(sp.current_user_saved_tracks(), feature_vector, self.gptAPI.get_activity_genres(activity), sp)
+            recommendations = recommender.get_recommendations()
+            return render_template('search.html', tracks=recommendations, username=username, activity=activity)
 
         @self.app.route("/<username>/playlist/daily-mix-1")
         def daily_mix_1(username):
@@ -112,4 +110,4 @@ class Sportify:
 if __name__ == "__main__":
     gptAPI = gpt.GptAPI()
     sportify_app = Sportify(__name__, gptAPI)
-    sportify_app.app.run(port=5010)
+    sportify_app.app.run(port=5020)
