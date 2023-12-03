@@ -1,7 +1,7 @@
 import json
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from flask import Flask, render_template, abort, request
+from flask import Flask, render_template, abort, request, redirect, url_for
 import gpt
 import RecommendationSystem
 
@@ -13,6 +13,11 @@ class Sportify:
         self.credentials = self.load_credentials('credentials.json')
     
     def setup_routes(self):
+
+        @self.app.route("/")
+        def home():
+            return redirect(url_for('rijul'))
+
         @self.app.route("/<username>")
         def index(username):
             user_credentials = self.credentials.get(username)
@@ -29,9 +34,9 @@ class Sportify:
             
             sp_oauth = self.create_spotify_oauth(user_credentials)
             sp = spotipy.Spotify(auth_manager=sp_oauth)
-            feature_vector = self.gptAPI.get_activity_feature_vectors()[activity]
+            feature_vector = self.gptAPI.load_activity_feature_vectors(activity)
 
-            recommender = RecommendationSystem.Recommender(sp.current_user_saved_tracks(), feature_vector, self.gptAPI.get_activity_genres(activity), sp)
+            recommender = RecommendationSystem.Recommender(sp.current_user_saved_tracks(limit=50), feature_vector, self.gptAPI.get_activity_genres(activity), sp)
             recommendations = recommender.get_recommendations()
             return render_template('search.html', tracks=recommendations, username=username, activity=activity)
 
@@ -58,17 +63,6 @@ class Sportify:
                             client_secret=user_credentials['SPOTIFY_CLIENT_SECRET'],
                             redirect_uri=user_credentials['REDIRECT_URI'],
                             scope="playlist-read-private")
-    
-    def build_tracks_with_images2(self, results):
-        tracks_with_images = []
-        for track in results['tracks']:
-            album_cover_url = track['album']['images'][0]['url']  
-            tracks_with_images.append({
-                'name': track['name'],
-                'artist': track['artists'][0]['name'],
-                'album_cover_url': album_cover_url
-            })
-        return tracks_with_images
 
     def build_tracks_with_images(self, results, limit=10):
         tracks_with_images = []
@@ -110,4 +104,4 @@ class Sportify:
 if __name__ == "__main__":
     gptAPI = gpt.GptAPI()
     sportify_app = Sportify(__name__, gptAPI)
-    sportify_app.app.run(port=5020)
+    sportify_app.app.run(port=5000)

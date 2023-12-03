@@ -9,7 +9,8 @@ class Recommender():
         self.sp = sp
         self.genres = genres
         self.recommendation_pool = self.get_recommendation_pool()
-        #self.user_songs = self.build_user_songs_dataframe(user_songs)
+        self.user_songs = self.build_user_songs_dataframe(user_songs)
+        
         self.relevant_features = ['popularity',
                                 'danceability',
                                 'energy',
@@ -20,30 +21,24 @@ class Recommender():
         self.scaler = StandardScaler()
         self.scaler.fit(self.recommendation_pool[self.relevant_features])
         self.recommendation_pool = self.transform_features(self.recommendation_pool)
+        self.user_songs = self.transform_features(self.user_songs)
         
     def transform_features(self, songscopy):
         songscopy[self.relevant_features] = self.scaler.transform(songscopy[self.relevant_features])
+        print(songscopy)
         return songscopy 
 
     # Gets recommendations from spotify based on various genres and music features correlated with an activity. These feature vectors are generated
     # in main using the GptAPI class. 
     def get_recommendation_pool(self):
         spotify_data = pd.read_csv('spotify_data.csv')
-
         spotify_data = spotify_data[spotify_data['genre'].isin(self.genres)]
         return spotify_data
 
-        #all_recommendations = []
-        #for genre in self.genres:
-            #recommendations = self.sp.recommendations(seed_genres=[genre],limit=2, target=target_features)
-            #all_recommendations.append(recommendations['tracks'])
-
-        #return self.build_recommendation_dataframe(all_recommendations)
-    
     # Builds a DataFrame representing the features of the songs the user has saved (to learn about their preferences)
     def build_user_songs_dataframe(self, user_songs):
         songs_data = []
-        for item in user_songs:
+        for item in user_songs['items']:
             track = item['track']
             audio_features = self.sp.audio_features(track['id'])[0]
             track_data = {
@@ -53,49 +48,37 @@ class Recommender():
                 'danceability': audio_features['danceability'],
                 'energy': audio_features['energy'],
                 'loudness': audio_features['loudness'],
+                'mode': audio_features['mode'],
                 'valence': audio_features['valence'],
                 'tempo': audio_features['tempo'],
                 'added_at': int(item['added_at'].split('-')[0])
             }
             songs_data.append(track_data)
-            saved_songs = pd.DataFrame(songs_data)
-            return saved_songs
-        
-    # Builds a dataframe of the recommendations received from the spotipy API, with specific features aligned with the feature vector
-    # Generated from the ChatGPT API
-    def build_recommendation_dataframe(self, tracks_list):
-        songs_dataframe = pd.DataFrame([])
-        for tracks in tracks_list:
-            songs_data = []
-            for track in tracks:
-                audio_features = self.sp.audio_features(track['id'])[0]
-                track_data = {
-                    'artist_name': track['artists'][0]['name'],
-                    'album_cover_url': track['album']['images'][0]['url'],
-                    'track_name': track['name'],
-                    'track_id': track['id'],
-                    'popularity': track['popularity'],
-                    'year': int(track['album']['release_date'].split('-')[0]),
-                    'danceability': audio_features['danceability'],
-                    'energy': audio_features['energy'],
-                    'loudness': audio_features['loudness'],
-                    'valence': audio_features['valence'],
-                    'tempo': audio_features['tempo'],
-                }
-                songs_data.append(track_data)
-            songs_data = pd.DataFrame(songs_data)
-            songs_dataframe = pd.concat([songs_dataframe, songs_data], ignore_index=True)
+        saved_songs = pd.DataFrame(songs_data)
+        return saved_songs
+    
+    # Creates a weighted mean vector of the user's saved songs based on how recently the track was saved
+    def get_user_mean_vector(self):
+        meanYear = self.user_songs['added_at'].mean()
+        meanYearDifference = (abs(self.user_songs['added_at'] - meanYear)).mean()
+        if (abs(meanYearDifference) < 1e-9):
+            return pd.DataFrame(self.user_songs[self.relevant_features].sum() / self.user_songs.shape[0]).T  
 
-        songs_dataframe = songs_dataframe.drop_duplicates(subset='track_id')
-        return songs_dataframe       
+        self.user_songs[self.relevant_features] = self.user_songs[self.relevant_features].mul((abs(self.user_songs['added_at'] - meanYear) / meanYearDifference).clip(upper=1), axis=0)
+        return pd.DataFrame(self.user_songs[self.relevant_features].sum() / ((abs(self.user_songs['added_at'] - meanYear) / meanYearDifference).clip(upper=1)).sum()).T  
     
     def get_recommendations(self):
         activity_vector = np.array(self.activity_feature).reshape(1, -1)
 
         similarity = cosine_similarity(self.recommendation_pool[self.relevant_features], self.scaler.transform(activity_vector))
         self.recommendation_pool['cosine_similarity'] = similarity
-        best_recommendations = self.recommendation_pool.sort_values(by='cosine_similarity', ascending=False).head(10)
-        
+        best_recommendations = self.recommendation_pool.sort_values(by='cosine_similarity', ascending=False).head(100)
+
+        mean_vector = self.get_user_mean_vector()
+        similarity = cosine_similarity(best_recommendations[self.relevant_features], mean_vector)
+        best_recommendations['cosine_similarity'] = similarity
+        best_recommendations = best_recommendations.sort_values(by='cosine_similarity', ascending=False).head(10)
+
         best_track_dictionary = []
 
         for index, row in best_recommendations.iterrows():
@@ -106,6 +89,8 @@ class Recommender():
             })
 
         return best_track_dictionary
+    
+
 
 
 
