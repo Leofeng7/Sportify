@@ -25,7 +25,6 @@ class Recommender():
         
     def transform_features(self, songscopy):
         songscopy[self.relevant_features] = self.scaler.transform(songscopy[self.relevant_features])
-        print(songscopy)
         return songscopy 
 
     # Gets recommendations from spotify based on various genres and music features correlated with an activity. These feature vectors are generated
@@ -72,7 +71,7 @@ class Recommender():
 
         similarity = cosine_similarity(self.recommendation_pool[self.relevant_features], self.scaler.transform(activity_vector))
         self.recommendation_pool['cosine_similarity'] = similarity
-        best_recommendations = self.recommendation_pool.sort_values(by='cosine_similarity', ascending=False).head(100)
+        best_recommendations = self.recommendation_pool.sort_values(by='cosine_similarity', ascending=False).head(200)
 
         mean_vector = self.get_user_mean_vector()
         similarity = cosine_similarity(best_recommendations[self.relevant_features], mean_vector)

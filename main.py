@@ -16,7 +16,7 @@ class Sportify:
 
         @self.app.route("/")
         def home():
-            return redirect(url_for('rijul'))
+            return redirect(url_for('index', username='rijul'))
 
         @self.app.route("/<username>")
         def index(username):
