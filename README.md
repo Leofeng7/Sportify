@@ -14,6 +14,11 @@ Make sure you have the dependencies installed. You do so by running `pip install
 
 Run the Flask web app using `python3 main.py` and that should start up the web server. Click [127.0.0.1:](http://127.0.0.1:5000) to access it.
 
+## Demo
+
+https://github.com/Leofeng7/Sportify/assets/108312435/56090f0a-95f5-4bf8-852d-169f71d18f11
+
+
 
 
 
